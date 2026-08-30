@@ -1,65 +1,118 @@
 # --- MENÚ INTERACTIVO PARA GESTIÓN DE INVENTARIO DE PRODUCTOS ---
 
-# Lista vacía para almacenar los productos (Inventario inicializado vacío)
+# Inventario inicializado vacío
 inventario = []
 
-# Menú interactivo
+# Menú principal
 while True:
-    print("\n\tMenú de Gestión de Productos")
-    print("\t1. Agregar producto al inventario")
-    print("\t2. Mostrar productos registrados")
-    print("\t3. Salir")
-    print("")
+    print("\n" + "=" * 45)
+    print("       MENÚ DE GESTIÓN DE PRODUCTOS")
+    print("=" * 45)
+    print("1. Agregar producto al inventario")
+    print("2. Mostrar productos registrados")
+    print("3. Salir")
+    print("=" * 45)
 
-    # Solicitar al usuario que elija una opción 
-    opcion = input("\tIngresa una opción (1, 2 o 3): ")
+    opcion = input("Ingresa una opción (1, 2 o 3): ").strip()
 
-    # Opción 1: Agregar producto al inventario
+    # --------------------------------------------------
+    # OPCIÓN 1: AGREGAR PRODUCTO
+    # --------------------------------------------------
     if opcion == "1":
-        nombre = input("\tIngresa el nombre del producto: ")
 
-        # Validación de la cantidad: asegurar que sea un número positivo
-        cantidad = -1
-        while cantidad <= 0:
-            cantidad_input = input("\tIngresa la cantidad de productos (debe ser mayor a 0): ")
+        # Validar nombre del producto
+        while True:
+            nombre = input("\nIngresa el nombre del producto: ").strip()
 
-            # Verificar si la entrada está vacía o no es un número positivo
+            if nombre:
+                break
+
+            print("⚠ El nombre no puede estar vacío.")
+
+        # Validar cantidad
+        while True:
+            cantidad_input = input(
+                "Ingresa la cantidad (mayor a 0): "
+            ).strip()
+
             if not cantidad_input:
-                print("\tNo ingresaste nada. Intenta de nuevo.")
+                print("⚠ No ingresaste ninguna cantidad.")
+
             elif not cantidad_input.isdigit():
-                print("\tLa cantidad debe ser un número entero positivo. Intenta de nuevo.")
+                print("⚠ Debes ingresar un número entero positivo.")
+
             else:
-                # Convertir la entrada (string) a entero y verificar si es positiva
                 cantidad = int(cantidad_input)
-                if cantidad <= 0:
-                    print("\tLa cantidad no puede ser menor o igual a 0. Intenta de nuevo.")
 
-        # Agregar el producto y su cantidad al inventario
-        inventario.append([nombre, cantidad])
-        print(f"\n\tEl producto '{nombre}' fue agregado con éxito con {cantidad} unidades.")
+                if cantidad > 0:
+                    break
 
-    # Opción 2: Mostrar inventario usando un índice manual
+                print("⚠ La cantidad debe ser mayor a 0.")
+
+        # Buscar si el producto ya existe
+        producto_existente = False
+
+        for producto in inventario:
+            if producto[0].lower() == nombre.lower():
+                producto[1] += cantidad
+                producto_existente = True
+
+                print(
+                    f"\n✓ El producto '{producto[0]}' ya estaba registrado."
+                    f"\n  Se agregaron {cantidad} unidades."
+                    f"\n  Stock actual: {producto[1]} unidades."
+                )
+                break
+
+        # Si no existe, agregarlo
+        if not producto_existente:
+            inventario.append([nombre, cantidad])
+
+            print(
+                f"\n✓ El producto '{nombre}' fue agregado correctamente."
+                f"\n  Cantidad: {cantidad} unidades."
+            )
+
+    # --------------------------------------------------
+    # OPCIÓN 2: MOSTRAR INVENTARIO
+    # --------------------------------------------------
     elif opcion == "2":
-        if inventario:
-         print("\n\t---------Inventario Actual---------")
-         print("\t Producto           \t Cantidad")
-         print("\t------------------------------------")  # Línea para separar los encabezados de los datos
-         indice = 0
-         while indice < len(inventario):
-             print(f"\n\t {inventario[indice][0]}                    \t {inventario[indice][1]}")
-             indice += 1
-        else:
-            print("\n\tEl inventario está vacío.")
 
-    # Opción 3: Salir del menú
+        if inventario:
+
+            print("\n" + "=" * 45)
+            print("              INVENTARIO ACTUAL")
+            print("=" * 45)
+            print(f"{'Producto':<30}{'Cantidad':>10}")
+            print("-" * 45)
+
+            indice = 0
+
+            while indice < len(inventario):
+                nombre = inventario[indice][0]
+                cantidad = inventario[indice][1]
+
+                print(f"{nombre:<30}{cantidad:>10}")
+
+                indice += 1
+
+            print("=" * 45)
+            print(f"Total de productos registrados: {len(inventario)}")
+
+        else:
+            print("\n⚠ El inventario está vacío.")
+
+    # --------------------------------------------------
+    # OPCIÓN 3: SALIR
+    # --------------------------------------------------
     elif opcion == "3":
-        print("\n\tSaliendo del programa. ¡Hasta luego!")
+
+        print("\n✓ Saliendo del programa. ¡Hasta luego!")
         break
 
-    # Opción inválida
+    # --------------------------------------------------
+    # OPCIÓN INVÁLIDA
+    # --------------------------------------------------
     else:
-        print("")
-        print("\tOpción inválida. Por favor, selecciona una opción válida (1, 2 o 3).")
-        
-
+        print("\n⚠ Opción inválida. Selecciona 1, 2 o 3.")
         
